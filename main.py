@@ -26,7 +26,8 @@ def get_weather():
   print(res)
   weather = " " + res['wea'] + ", " + res['tem_night'] + "℃~" + res['tem_day'] + "℃"
   tem = " " + res['tem']
-  return weather, tem
+  dateweek = res['date'] + " " + res['week']
+  return weather, tem, dateweek
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
@@ -52,11 +53,13 @@ def get_random_color():
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
-wea, temperature = get_weather()
-data = {"weather": {"value": wea, "color": get_random_color()},
-        "temperature": {"value": temperature, "color": get_random_color()},
-        "love_days": {"value": get_count(), "color": get_random_color()},
-        "birthday_left": {"value": get_birthday(), "color": get_random_color()},
+wea, temperature, date_week = get_weather()
+data = {"dateweek": {"value": date_week},
+        "city": {"value": city},
+        "weather": {"value": wea},
+        "temperature": {"value": temperature},
+        "love_days": {"value": get_count()},
+        "birthday_left": {"value": get_birthday()},
         "words": {"value": get_words(), "color": get_random_color()}}
 print(data)
 res = wm.send_template(user_id, template_id, data)
